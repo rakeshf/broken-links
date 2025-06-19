@@ -1,4 +1,4 @@
-# 🔍 Broken Link Checker
+# 🔍 Broken Link Checker [![CodeFactor](https://www.codefactor.io/repository/github/rakeshf/broken-links/badge/main)](https://www.codefactor.io/repository/github/rakeshf/broken-links/overview/main)
 
 A powerful Python tool for scanning websites to identify broken links, dead URLs, and accessibility issues. Perfect for website maintenance, SEO audits, and quality assurance.
 
