@@ -32,7 +32,7 @@ A powerful Python tool for scanning websites to identify broken links, dead URLs
 
 2. **Install dependencies**:
    ```bash
-   pip install requests beautifulsoup4 lxml
+   pip install requirements.txt
    ```
 
 3. **Make it executable** (optional):
