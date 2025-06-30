@@ -15,6 +15,7 @@ import os
 import re
 
 SCAN_DB_FILE = "scan_db.json"
+DOWNLOAD_DIR = "download"
 
 class BrokenLinkChecker:
     def __init__(self, max_urls=100, max_depth=2, delay=1.0, same_domain_only=True):
@@ -325,6 +326,9 @@ class ScanRequest(BaseModel):
     delay: Optional[float] = 1.0
     same_domain_only: Optional[bool] = True
 
+# Ensure the download directory exists
+os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+
 def safe_filename_from_url(url: str, date: str = None) -> str:
     # Remove scheme and replace non-alphanumeric with underscores
     name = re.sub(r'^https?://', '', url)
@@ -347,15 +351,16 @@ def start_scan(request: ScanRequest):
         scans[scan_id] = checker
         save_scans(scans)  # Save to file after each scan
 
-        # Create filename from URL and date
+        # Create filename from URL and date in the download directory
         filename = safe_filename_from_url(request.url, datetime.now().strftime("%Y%m%d"))
-        with open(filename, "w", encoding="utf-8") as f:
+        filepath = os.path.join(DOWNLOAD_DIR, filename)
+        with open(filepath, "w", encoding="utf-8") as f:
             json.dump(checker.get_results_json(), f, indent=2, ensure_ascii=False)
 
         return {
             "message": "Scan completed",
             "scan_id": scan_id,
-            "result_file": filename,
+            "result_file": filepath,
             "statistics": checker.get_results_json()["statistics"],
             "max_urls": checker.max_urls
         }
