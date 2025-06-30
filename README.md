@@ -25,7 +25,7 @@ A powerful Python tool for scanning websites to identify broken links, dead URLs
 
 1. **Clone or download the script**:
    ```bash
-   wget https://raw.githubusercontent.com/your-repo/broken_link_checker.py
+   wget https://raw.githubusercontent.com/rakeshf/broken_link_checker.py
    # or
    curl -O https://raw.githubusercontent.com/your-repo/broken_link_checker.py
    ```
@@ -250,6 +250,88 @@ python3 broken_link_checker.py https://example.com
 - Use smaller `--max-urls` values
 - Reduce `--max-depth`
 - Run multiple focused scans instead of one large scan
+
+## 🌐 API Usage
+
+A REST API is provided for programmatic scanning, status checking, and result retrieval.
+
+### 1. **Start the API Server**
+
+```bash
+uvicorn broken_link_checker_api:app --host 0.0.0.0 --port 8000 --reload
+```
+Or:
+```bash
+python broken_link_checker_api.py api
+```
+
+### 2. **Start a Scan**
+
+**POST** `/scan`
+
+**Request JSON:**
+```json
+{
+  "url": "https://example.com",
+  "max_urls": 100,
+  "max_depth": 2,
+  "delay": 1.0,
+  "same_domain_only": true
+}
+```
+- Only `url` is required; other fields are optional.
+
+**Response:**
+```json
+{
+  "message": "Scan completed",
+  "scan_id": "e1b2c3d4-...",
+  "result_file": "download/example_com_20250630.json",
+  "statistics": { ... },
+  "max_urls": 100
+}
+```
+
+### 3. **Check Scan Status**
+
+**GET** `/status/{scan_id}`
+
+**Response:**
+```json
+{
+  "status": "completed",
+  "total_urls_processed": 100,
+  "working_links": 90,
+  "broken_links": 8,
+  "error_links": 2,
+  "broken_links_list": [...],
+  "error_links_list": [...],
+  "start_domain": "example.com",
+  "max_urls": 100,
+  "max_depth": 2,
+  "delay": 1.0,
+  "same_domain_only": true
+}
+```
+- `status` can be `in_progress`, `completed`, or `not_started`.
+
+### 4. **Get Scan Results**
+
+**GET** `/results/{scan_id}`
+
+Returns the full scan results in JSON format.
+
+### 5. **Download Result File**
+
+Result files are stored in the `download/` directory with a name based on the URL and date, e.g.:
+```
+download/example_com_20250630.json
+```
+You can download this file directly from the server if you expose a static file endpoint or via SFTP.
+
+### 6. **Interactive API Docs**
+
+Visit [http://localhost:8000/docs](http://localhost:8000/docs) for interactive Swagger UI.
 
 ---
 
