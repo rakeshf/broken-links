@@ -15,7 +15,7 @@ import os
 import re
 
 SCAN_DB_FILE = "scan_db.json"
-DOWNLOAD_DIR = "download"
+DOWNLOAD_DIR = "downloads"
 
 class BrokenLinkChecker:
     def __init__(self, max_urls=100, max_depth=2, delay=1.0, same_domain_only=True):
